@@ -2,20 +2,19 @@
 
 import fetch from "node-fetch";
 
-const Authorization = process.env.QAWOLF_API_KEY;
-
 export async function queryApi(
   operationName: string,
   query: string,
   variables = {}
 ) {
+  console.log("Querying API", operationName, process.env.QAWOLF_API_KEY);
   return await fetch("https://app.qawolf.com/api/graphql", {
     method: "POST",
 
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization,
+      Authorization: process.env.QAWOLF_API_KEY,
     },
 
     body: JSON.stringify({

@@ -5,8 +5,6 @@ import path from "path";
 import snakeCase from "lodash/snakeCase";
 import { queryApi } from "./queryApi";
 
-const TeamId = process.env.QAWOLF_TEAM_ID;
-
 interface Workflow {
   id: string;
   name: string;
@@ -24,106 +22,103 @@ interface Workflow {
   };
 }
 
-async function queryTests(): Promise<Workflow[]> {
-  const response = await queryApi(
-    "workflowsListPage",
-    `
-    query workflowsListPage($teamId: String!, $branchId: String) {
-      groups(
-        orderBy: {name: asc}
-        where: {team_id: {equals: $teamId}, deleted_at: {equals: null}}
-      ) {
+const workflowsListPageQuery = `
+query workflowsListPage($teamId: String!, $branchId: String) {
+  groups(
+    orderBy: {name: asc}
+    where: {team_id: {equals: $teamId}, deleted_at: {equals: null}}
+  ) {
+    id
+    name
+    priority
+    updated_at
+    __typename
+  }
+  teamBranches(where: {teamId: {equals: $teamId}}) {
+    id
+    environments(where: {deletedAt: {equals: null}}) {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+  workflowOnBranches(
+    where: {branchId: {equals: $branchId}, workflow: {is: {deleted_at: {equals: null}}}}
+  ) {
+    id
+    workflowId
+    stepsOnBranch {
+      id
+      createdAt
+      index
+      stepOnBranch {
+        id
+        stepId
+        name
+        codeDenormalized
+        step {
+          id
+          isUtility
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    workflow {
+      affectingIssues: deprecated_affectingIssues {
+        id
+        isActive
+        isBlocking
+        issueId
+        issue {
+          affectedEnvironments {
+            branchId
+            __typename
+          }
+          id
+          name
+          reportedSuiteId
+          status
+          type
+          __typename
+        }
+        __typename
+      }
+      id
+      description
+      name
+      status
+      status_updated_at
+      tags {
+        color
         id
         name
-        priority
         updated_at
         __typename
       }
-      teamBranches(where: {teamId: {equals: $teamId}}) {
+      tasks {
+        completedAt
+        dueAtString
         id
-        environments(where: {deletedAt: {equals: null}}) {
-          id
-          name
-          __typename
-        }
+        type
         __typename
       }
-      workflowOnBranches(
-        where: {branchId: {equals: $branchId}, workflow: {is: {deleted_at: {equals: null}}}}
-      ) {
-        id
-        workflowId
-        stepsOnBranch {
-          id
-          createdAt
-          index
-          stepOnBranch {
-            id
-            stepId
-            name
-            codeDenormalized
-            step {
-              id
-              isUtility
-              __typename
-            }
-            __typename
-          }
-          __typename
-        }
-        workflow {
-          affectingIssues: deprecated_affectingIssues {
-            id
-            isActive
-            isBlocking
-            issueId
-            issue {
-              affectedEnvironments {
-                branchId
-                __typename
-              }
-              id
-              name
-              reportedSuiteId
-              status
-              type
-              __typename
-            }
-            __typename
-          }
-          id
-          description
-          name
-          status
-          status_updated_at
-          tags {
-            color
-            id
-            name
-            updated_at
-            __typename
-          }
-          tasks {
-            completedAt
-            dueAtString
-            id
-            type
-            __typename
-          }
-          updated_at
-          group_id
-          __typename
-        }
-        __typename
-      }
+      updated_at
+      group_id
+      __typename
     }
- `,
-    {
-      // teamId: TeamId,
-      branchId: "528b1ea5-2f1a-4587-ba7b-f27cbdcb93ea",
-      teamId: TeamId,
-    }
-  );
+    __typename
+  }
+}
+`;
+
+async function queryTests(): Promise<Workflow[]> {
+  const response = await queryApi("workflowsListPage", workflowsListPageQuery, {
+    branchId: process.env.BRANCH_ID,
+    teamId: process.env.QAWOLF_TEAM_ID,
+  });
 
   const body = await response.text();
   try {

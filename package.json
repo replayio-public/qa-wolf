@@ -8,7 +8,7 @@
     "async-retry": "^1.3.3",
     "axios": "^1.6.0",
     "cuid": "^3.0.0",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.5",
     "get-urls": "^10.0.1",
     "lodash": "^4.17.21",
     "playwright": "^1.39.0",
@@ -22,7 +22,8 @@
     "@types/node-fetch": "^2.6.7"
   },
   "scripts": {
-    "buildkite": "node ./buildkite.js"
+    "buildkite": "node ./buildkite.js",
+    "test": "ts-node ./run.ts"
   },
   "trustedDependencies": [
     "@replayio/protocol",
