@@ -4,7 +4,11 @@ import sync from "./sync";
 import test from "./test";
 // import { replayRecording } from "../../../src/processing/replayRecording";
 
-import { listAllRecordings, uploadAllRecordings, RecordingEntry } from "@replayio/replay";
+import {
+  listAllRecordings,
+  uploadAllRecordings,
+  RecordingEntry,
+} from "@replayio/replay";
 
 const DispatchAddress =
   process.env["RECORD_REPLAY_DISPATCH_SERVER"] || "wss://dispatch.replay.io";
@@ -21,7 +25,8 @@ async function uploadAndProcess() {
       typeof r.metadata["x-qawolf"] === "object"
     ) {
       return (
-        (r.metadata["x-qawolf"] as Record<string, any>).id === process.env.QAWOLF_RUN_ID
+        (r.metadata["x-qawolf"] as Record<string, any>).id ===
+        process.env.QAWOLF_RUN_ID
       );
     }
 
@@ -33,7 +38,9 @@ async function uploadAndProcess() {
   });
 
   console.log(
-    `Uploading ${allRecordings.length} recordings:\n  ${allRecordings.join("\n  ")}`
+    `Uploading ${allRecordings.length} recordings:\n  ${allRecordings.join(
+      "\n  "
+    )}`
   );
   try {
     await uploadAllRecordings({ filter });
@@ -62,7 +69,7 @@ async function uploadAndProcess() {
         //   typeof r.metadata.uri === "string" ? r.metadata.uri : undefined,
         //   {
         //     verbose: false,
-        //     apiKey: process.env.RECORD_REPLAY_API_KEY,
+        //     apiKey: process.env.REPLAY_API_KEY,
         //   }
         // );
       } else {
@@ -89,8 +96,10 @@ async function main(playwrightArgs: string[]) {
     console.error("Failed to run tests", e);
   }
 
-  console.log("-- Uploading and Processing Tests --");
-  await uploadAndProcess();
+  if (process.env.REPLAY_API_KEY) {
+    console.log("-- Uploading and Processing Tests --");
+    await uploadAndProcess();
+  }
 }
 
 if (require.main === module) {
