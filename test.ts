@@ -2,12 +2,12 @@
 
 import { spawnSync } from "child_process";
 import path from "path";
+import fs from "fs";
 
 import { queryApi } from "./queryApi";
 
-const EnvironmentId = process.env.QAWOLF_ENVIRONMENT_ID;
-
 async function getEnvironment(): Promise<Record<string, string>> {
+  const EnvironmentId = process.env.QAWOLF_ENVIRONMENT_ID;
   const response = await queryApi(
     "environment",
     "query environment($id: String!) {\n  environment(where: {id: $id}) {\n    ...EnvironmentFragment\n    __typename\n  }\n}\n\nfragment EnvironmentFragment on Environment {\n  id\n  name\n  variablesJSON\n  variables(orderBy: {name: asc}) {\n    ...EnvironmentVariableFragment\n    __typename\n  }\n  __typename\n}\n\nfragment EnvironmentVariableFragment on EnvironmentVariable {\n  created_at\n  environment_id\n  id\n  name\n  value\n  __typename\n}\n",
@@ -23,7 +23,13 @@ async function getEnvironment(): Promise<Record<string, string>> {
 export default async function main(args: string[] = []) {
   const env = await getEnvironment();
 
-  console.log("Setting environment variables:", Object.keys(env).join(", "));
+  console.log("Setting environment variables:");
+
+  const envDump = Object.keys(env)
+    .map((key) => `${key}=${JSON.stringify(env[key])}`)
+    .join("\n");
+
+  fs.writeFileSync(path.join(__dirname, ".env.qawolf"), envDump);
 
   const allArgs = [
     "playwright",

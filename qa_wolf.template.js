@@ -7,7 +7,8 @@ const { getInbox } = require("../getInbox");
 const { test, expect } = require("@playwright/test");
 const { chromium } = require("playwright");
 const { spawnSync } = require("child_process");
-require("dotenv").config();
+
+require("dotenv").config({ path: [".env.local", ".env.qawolf"] });
 
 async function launch(opts) {
   // Inject an ID so we can match up replays after the run

@@ -6,7 +6,9 @@ import dotenv from "dotenv";
 
 import { uploadAndProcess } from "./uploadAndProcess";
 
-dotenv.config({ path: ".env.local" });
+// how do i use multiple configs
+
+dotenv.config({ path: [".env.local", "env.qawolf"] });
 
 async function main(playwrightArgs: string[]) {
   process.env.QAWOLF_RUN_ID =
