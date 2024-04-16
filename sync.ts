@@ -32,23 +32,23 @@ query workflowsListPage($teamId: String!, $branchId: String) {
     name
     priority
     updated_at
-    __typename
+    
   }
   teamBranches(where: {teamId: {equals: $teamId}}) {
     id
     environments(where: {deletedAt: {equals: null}}) {
       id
       name
-      __typename
+      
     }
-    __typename
+    
   }
   workflowOnBranches(
     where: {branchId: {equals: $branchId}, workflow: {is: {deleted_at: {equals: null}}}}
   ) {
     id
     workflowId
-    stepsOnBranch {
+    stepOnBranchInWorkflowOnBranch {
       id
       createdAt
       index
@@ -60,11 +60,11 @@ query workflowsListPage($teamId: String!, $branchId: String) {
         step {
           id
           isUtility
-          __typename
+          
         }
-        __typename
+        
       }
-      __typename
+      
     }
     workflow {
       affectingIssues: deprecated_affectingIssues {
@@ -75,16 +75,16 @@ query workflowsListPage($teamId: String!, $branchId: String) {
         issue {
           affectedEnvironments {
             branchId
-            __typename
+            
           }
           id
           name
           reportedSuiteId
           status
           type
-          __typename
+          
         }
-        __typename
+        
       }
       id
       description
@@ -96,20 +96,18 @@ query workflowsListPage($teamId: String!, $branchId: String) {
         id
         name
         updated_at
-        __typename
+        
       }
       tasks {
         completedAt
         dueAtString
         id
         type
-        __typename
+        
       }
       updated_at
       group_id
-      __typename
     }
-    __typename
   }
 }
 `;
@@ -124,7 +122,10 @@ async function queryTests(): Promise<Workflow[]> {
   try {
     return JSON.parse(body).data.workflowOnBranches.map(
       (workflowOnBranch: any) => {
-        return { ...workflowOnBranch, steps: workflowOnBranch.stepsOnBranch };
+        return {
+          ...workflowOnBranch,
+          steps: workflowOnBranch.stepOnBranchInWorkflowOnBranch,
+        };
       }
     );
   } catch (e) {
@@ -153,10 +154,8 @@ export default async function main() {
     .toString();
 
   const promises = tests
-    .filter(
-      (t) =>
-        t.workflow.status === "active" || t.workflow.status === "maintenance"
-    )
+    .filter((t) => t.workflow.status === "active")
+    .slice(0, 5)
     .map(async (test) => {
       if (test.name === "builder.ai: Create Airbnb Buildcard") {
         return null;
