@@ -9,7 +9,13 @@ module.exports = {
   testDir: platform() === "win32" ? ".\\src\\tests" : "./src/tests",
   expect: { timeout: 20_000 },
   timeout: 120_000,
+  workers: 4,
+
   use: {
-    headless: true,
+    // headless: false,
+    // headed: true,
+    trace: 'on'
   },
+
+  retries: 3
 };

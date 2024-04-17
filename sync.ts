@@ -10,6 +10,7 @@ interface Workflow {
   name: string;
   steps: {
     id: string;
+    index: number;
     stepOnBranch: {
       id: string;
       name: string;
@@ -155,7 +156,6 @@ export default async function main() {
 
   const promises = tests
     .filter((t) => t.workflow.status === "active")
-    .slice(0, 5)
     .map(async (test) => {
       if (test.name === "builder.ai: Create Airbnb Buildcard") {
         return null;
@@ -164,10 +164,12 @@ export default async function main() {
       const helperCode =
         test.steps.find((s) => s.stepOnBranch.name === "Helpers")?.stepOnBranch
           .codeDenormalized ?? "";
+
       const testCode = test.steps
         .filter(
           (s) => !["Helpers", "Upload Replay"].includes(s.stepOnBranch.name)
         )
+        .sort((a, b) => a.index - b.index)
         .map((t) => `{\n${t.stepOnBranch.codeDenormalized}\n}`)
         .join("\n");
 
