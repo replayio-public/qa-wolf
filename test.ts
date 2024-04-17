@@ -26,7 +26,7 @@ export default async function main(args: string[] = []) {
   console.log("Setting environment variables:");
 
   const envDump = Object.keys(env)
-    .map((key) => `${key}=${JSON.stringify(env[key])}`)
+    .map((key) => `${key}="${env[key]}"`)
     .join("\n");
 
   fs.writeFileSync(path.join(__dirname, ".env.qawolf"), envDump);
