@@ -1,30 +1,22 @@
 /* Copyright 2020-2024 Record Replay Inc. */
 
-const assert = require("assert");
-const { assertElement, assertText, getValue } = require("qawolf");
+const { assertElement, assertText } = require("qawolf");
 const { faker } = require("@faker-js/faker");
 const { getInbox } = require("../getInbox");
 const { test, expect } = require("@playwright/test");
 const { chromium } = require("playwright");
-const { spawnSync } = require("child_process");
 
 require("dotenv").config({ path: [".env.local", ".env.qawolf"] });
 
 async function launch(opts) {
-  // Inject an ID so we can match up replays after the run
-  if (process.env.QAWOLF_RUN_ID) {
-    const env = { ...process.env, ...opts.env };
-    const metadata = env.RECORD_REPLAY_METADATA
-      ? JSON.parse(env.RECORD_REPLAY_METADATA)
-      : {};
-    metadata["x-qawolf"] = { id: process.env.QAWOLF_RUN_ID };
-    env.RECORD_REPLAY_METADATA = JSON.stringify(metadata);
-
-    opts.env = env;
-  }
-
+  const { devices } = require("@replayio/playwright");
   const browser = await chromium.launch({
     ...opts,
+    executablePath: devices["Replay Chromium"].launchOptions.executablePath,
+    env: {
+      ...(opts.env || {}),
+      ...devices["Replay Chromium"].launchOptions.env,
+    },
     headless: true,
   });
   return {
@@ -34,7 +26,7 @@ async function launch(opts) {
 }
 
 let shared = {};
-globalThis.runCommand = cmd => {
+globalThis.runCommand = (cmd) => {
   // runs npx commands that we don't need locally
 };
 

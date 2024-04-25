@@ -1,6 +1,6 @@
-src/
 .env.local
 .env.qawolf
 node_modules
 .DS_Store
 test-results/
+src/generated_tests/**
