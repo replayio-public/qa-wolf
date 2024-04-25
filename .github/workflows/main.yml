@@ -1,0 +1,30 @@
+name: Run QAWolf Tests
+on:
+  schedule:
+    - cron: '5 6 * * *'
+
+jobs:
+  run-qa-wolf-tests:
+    runs-on: macos-14
+    environment: 'QA Wolf Test Environment'
+    env:
+      QAWOLF_ENVIRONMENT_ID: ${{ secrets.QAWOLF_ENVIRONMENT_ID }}
+      QAWOLF_TEAM_ID: ${{ secrets.QAWOLF_TEAM_ID }}
+      BRANCH_ID: ${{ secrets.BRANCH_ID }}
+      QAWOLF_API_KEY: ${{ secrets.QAWOLF_API_KEY }}
+      REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
+      REPLAY_PLAYWRIGHT_FIXTURE: 1
+      RECORD_REPLAY_METADATA_TEST_RUN_TITLE: 'QAWolf Mac ARM'
+    steps:
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 8
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'pnpm'
+    - run: pnpm install
+    - run: npx replayio update
+    - run: npx ts-node src/sync.ts
+    - run: npx ts-node src/runPlaywright.ts
