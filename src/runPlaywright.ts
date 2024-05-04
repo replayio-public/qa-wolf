@@ -50,5 +50,8 @@ export async function runPlaywright() {
 if (require.main === module) {
   runPlaywright()
     .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+    .catch((e) => {
+      console.error(`Error: ${e}`);
+      process.exit(1);
+    });
 }

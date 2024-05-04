@@ -3,31 +3,17 @@ import { QAWolfEnvironmentId } from "../config";
 import { QAWolfApi } from "./qaWolfApi";
 
 const EnvironmentQuery = `
-    query environment($id: String!) {
-      environment(where: {id: $id}) {
-        ...EnvironmentFragment
-        __typename
-      }
-    }
-    fragment EnvironmentFragment on Environment {
+  query environment($id: String!) {
+    environment(where: {id: $id}) {
       id
       name
       variablesJSON
-      variables(orderBy: {name: asc}) {
-        ...EnvironmentVariableFragment
-        __typename
+      variables {
+        name
+        value
       }
-      __typename
     }
-    fragment EnvironmentVariableFragment on EnvironmentVariable {
-      created_at
-      environment_id
-      id
-      name
-      value
-      __typename
-    }
-    `;
+  }`;
 
 const ZQAWolfEnvironmentVariables = z.object({
   environment: z.object({
