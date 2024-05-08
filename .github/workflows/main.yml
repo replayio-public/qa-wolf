@@ -1,13 +1,13 @@
 name: Run QAWolf Tests
 on:
   schedule:
-    - cron: '5 6 * * *'
+    - cron: "5 6 * * *"
   workflow_dispatch:
 
 jobs:
   run-qa-wolf-tests:
     runs-on: macos-14
-    environment: 'QA Wolf Test Environment'
+    environment: "QA Wolf Test Environment"
     env:
       QAWOLF_ENVIRONMENT_ID: ${{ secrets.QAWOLF_ENVIRONMENT_ID }}
       QAWOLF_TEAM_ID: ${{ secrets.QAWOLF_TEAM_ID }}
@@ -15,17 +15,17 @@ jobs:
       QAWOLF_API_KEY: ${{ secrets.QAWOLF_API_KEY }}
       REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
       REPLAY_PLAYWRIGHT_FIXTURE: 1
-      RECORD_REPLAY_METADATA_TEST_RUN_TITLE: 'QAWolf Mac ARM'
+      RECORD_REPLAY_METADATA_TEST_RUN_TITLE: "QAWolf Mac ARM"
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v3
-      with:
-        version: 8
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 18
-        cache: 'pnpm'
-    - run: pnpm install
-    - run: npx replayio update
-    - run: npx ts-node src/sync.ts
-    - run: npx ts-node src/runPlaywright.ts
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Update browsers
+        run: npx replayio update
+      - name: Sync QAWolf Test Files
+        run: npx ts-node src/sync.ts
+      - name: Run QAWolf Tests
+        run: npx ts-node src/runPlaywright.ts

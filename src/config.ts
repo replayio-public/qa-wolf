@@ -1,3 +1,5 @@
+/* Copyright 2020-2024 Record Replay Inc. */
+
 import { randomUUID } from "crypto";
 import dotenv from "dotenv";
 import path from "path";

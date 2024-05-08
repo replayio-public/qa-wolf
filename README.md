@@ -10,7 +10,7 @@ commands that the GitHub workflow runs. First you will want to fill in the
 `.env.local` file using the values in 1Password. Then you can run:
 
 ```
-pnpm install
+npm install
 npx replayio update
 npx ts-node src/sync.ts
 npx ts-node src/runPlaywright.ts
