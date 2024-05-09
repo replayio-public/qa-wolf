@@ -14,7 +14,6 @@ jobs:
       BRANCH_ID: ${{ secrets.BRANCH_ID }}
       QAWOLF_API_KEY: ${{ secrets.QAWOLF_API_KEY }}
       REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
-      REPLAY_PLAYWRIGHT_FIXTURE: 1
       RECORD_REPLAY_METADATA_TEST_RUN_TITLE: "QAWolf Mac ARM"
     steps:
       - uses: actions/checkout@v4
