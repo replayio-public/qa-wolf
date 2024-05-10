@@ -7,7 +7,7 @@ module.exports = {
   testDir: path.join(".", "src", "generated_tests"),
   expect: { timeout: 15_000 },
   workers: 4,
-  timeout: 300_000,
+  timeout: 60_000,
   retries: 0,
   reporter: [
     [
