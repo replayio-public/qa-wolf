@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const WorkflowOnBranches = `
 query workflowsListPage($branchId: String!) {
-  workflowOnBranches(
+  workflowsOnBranch(
     where: {branchId: {equals: $branchId}, workflow: {is: {deleted_at: {equals: null}}}}
   ) {
     id
@@ -66,7 +66,7 @@ query workflowsListPage($branchId: String!) {
 `;
 
 const WorkflowsListPagesResponse = z.object({
-  workflowOnBranches: z.array(
+  workflowsOnBranch: z.array(
     z.object({
       id: z.string(),
       workflowId: z.string(),
@@ -85,7 +85,7 @@ const WorkflowsListPagesResponse = z.object({
               isUtility: z.boolean(),
             }),
           }),
-        })
+        }),
       ),
       workflow: z.object({
         id: z.string(),
@@ -101,7 +101,7 @@ const WorkflowsListPagesResponse = z.object({
             name: z.string(),
             id: z.string(),
             updated_at: z.string(),
-          })
+          }),
         ),
         tasks: z.array(
           z.object({
@@ -109,7 +109,7 @@ const WorkflowsListPagesResponse = z.object({
             dueAtString: z.string().nullable(),
             id: z.string(),
             type: z.string(),
-          })
+          }),
         ),
         affectingIssues: z.array(
           z.object({
@@ -124,10 +124,10 @@ const WorkflowsListPagesResponse = z.object({
               status: z.string(),
               type: z.string(),
             }),
-          })
+          }),
         ),
       }),
-    })
+    }),
   ),
 });
 type ZWorkflowsListPagesResponse = z.infer<typeof WorkflowsListPagesResponse>;

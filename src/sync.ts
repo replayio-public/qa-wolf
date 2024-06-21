@@ -15,17 +15,17 @@ export async function downloadAndSaveQAWolfTests() {
     .readFileSync(path.join(__dirname, "qa_wolf.template.js"))
     .toString();
 
-  return tests.workflowOnBranches
+  return tests.workflowsOnBranch
     .filter((t) => t.workflow.status === "active")
     .map((test) => {
       const helperCode =
         test.stepOnBranchInWorkflowOnBranch.find(
-          (s) => s.stepOnBranch.name === "Helpers"
+          (s) => s.stepOnBranch.name === "Helpers",
         )?.stepOnBranch.codeDenormalized ?? "";
 
       const testCode = test.stepOnBranchInWorkflowOnBranch
         .filter(
-          (s) => !["Helpers", "Upload Replay"].includes(s.stepOnBranch.name)
+          (s) => !["Helpers", "Upload Replay"].includes(s.stepOnBranch.name),
         )
         .sort((a, b) => a.index - b.index)
         .map((t) => `{\n${t.stepOnBranch.codeDenormalized}\n}`)
@@ -38,7 +38,7 @@ export async function downloadAndSaveQAWolfTests() {
         .replace("/*REPLACE_TEST_CODE*/", testCode);
       fs.writeFileSync(
         path.join(TestsDirectory, `${snakeCase(testName)}.test.js`),
-        generatedTest
+        generatedTest,
       );
     });
 }
