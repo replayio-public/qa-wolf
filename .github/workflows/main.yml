@@ -26,7 +26,11 @@ jobs:
         run: npx replayio update
       - name: Sync QAWolf Test Files
         run: npx ts-node src/sync.ts
-      - name: Decrypt cookie files to the right location
+      - name: Print Stuff
+        run: pwd
+      - name: Print Stuff
+        run: ls
+      - name: Decrypt cookie files
         run: openssl enc -aes-256-cbc -d -in cookies/cnnCookies.json.enc -out cookies/cnnCookies.json -pbkdf2 -iter 100000 -pass pass:"$PASSWORD"
       - name: Run QAWolf Tests
         run: npx ts-node src/runPlaywright.ts
