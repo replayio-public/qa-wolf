@@ -9,12 +9,13 @@ jobs:
     runs-on: macos-14
     environment: "QA Wolf Test Environment"
     env:
+      BRANCH_ID: ${{ secrets.BRANCH_ID }}
+      COOKIES_ENCRYPTION_KEY: ${{ secrets.COOKIES_ENCRYPTION_KEY }}
+      QAWOLF_API_KEY: ${{ secrets.QAWOLF_API_KEY }}
       QAWOLF_ENVIRONMENT_ID: ${{ secrets.QAWOLF_ENVIRONMENT_ID }}
       QAWOLF_TEAM_ID: ${{ secrets.QAWOLF_TEAM_ID }}
-      BRANCH_ID: ${{ secrets.BRANCH_ID }}
-      QAWOLF_API_KEY: ${{ secrets.QAWOLF_API_KEY }}
-      REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
       RECORD_REPLAY_METADATA_TEST_RUN_TITLE: "QAWolf Mac ARM"
+      REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,11 +27,13 @@ jobs:
         run: npx replayio update
       - name: Sync QAWolf Test Files
         run: npx ts-node src/sync.ts
-      - name: Print Stuff
-        run: pwd
-      - name: Print Stuff
-        run: ls
-      - name: Decrypt cookie files
-        run: openssl enc -aes-256-cbc -d -in cookies/cnnCookies.json.enc -out cookies/cnnCookies.json -pbkdf2 -iter 100000 -pass pass:"$PASSWORD"
+      - name: Decrypt CNN cookies file
+        run: openssl enc -aes-256-cbc -d -in cookies/cnnCookies.json.enc -out cookies/cnnCookies.json -pbkdf2 -iter 100000 -pass pass:"$COOKIES_ENCRYPTION_KEY"
+      - name: Decrypt Wix cookies file
+        run: openssl enc -aes-256-cbc -d -in cookies/wixCookies.json.enc -out cookies/wixCookies.json -pbkdf2 -iter 100000 -pass pass:"$COOKIES_ENCRYPTION_KEY"
+      - name: Decrypt Replit cookies file
+        run: openssl enc -aes-256-cbc -d -in cookies/replitCookies.json.enc -out cookies/replitCookies.json -pbkdf2 -iter 100000 -pass pass:"$COOKIES_ENCRYPTION_KEY"
+      - name: Decrypt Bubble cookies file
+        run: openssl enc -aes-256-cbc -d -in cookies/bubbleCookies.json.enc -out cookies/bubbleCookies.json -pbkdf2 -iter 100000 -pass pass:"$COOKIES_ENCRYPTION_KEY"
       - name: Run QAWolf Tests
         run: npx ts-node src/runPlaywright.ts
