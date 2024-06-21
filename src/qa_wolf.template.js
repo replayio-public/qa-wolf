@@ -1,6 +1,5 @@
 /* Copyright 2020-2024 Record Replay Inc. */
 
-const { execa } = require("execa");
 const { assertElement, assertText } = require("qawolf");
 const { faker } = require("@faker-js/faker");
 const { getInbox } = require("../getInbox");
@@ -38,5 +37,6 @@ let Browser = null;
 const Name = "/*REPLACE_NAME*/";
 
 test(Name, async () => {
+  const execa = await import("execa");
   /*REPLACE_TEST_CODE*/
 });
