@@ -1,6 +1,7 @@
 /* Copyright 2020-2024 Record Replay Inc. */
 
 import fs from "fs";
+import execa from "execa";
 import path from "path";
 import snakeCase from "lodash/snakeCase";
 import { resetDirectory } from "./utils";

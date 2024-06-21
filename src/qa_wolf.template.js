@@ -1,5 +1,6 @@
 /* Copyright 2020-2024 Record Replay Inc. */
 
+const { execa } = require("execa");
 const { assertElement, assertText } = require("qawolf");
 const { faker } = require("@faker-js/faker");
 const { getInbox } = require("../getInbox");
