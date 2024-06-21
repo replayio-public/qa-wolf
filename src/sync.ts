@@ -1,7 +1,6 @@
 /* Copyright 2020-2024 Record Replay Inc. */
 
 import fs from "fs";
-import execa from "execa";
 import path from "path";
 import snakeCase from "lodash/snakeCase";
 import { resetDirectory } from "./utils";
@@ -26,7 +25,7 @@ export async function downloadAndSaveQAWolfTests() {
             `const $ = execa`,
             `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
           )
-          .replaceAll(`/home/wolf/team-storage/`, `./cookies/`) ?? "";
+          .replaceAll(`/home/wolf/team-storage/`, `../cookies/`) ?? "";
 
       const testCode =
         test.stepOnBranchInWorkflowOnBranch
@@ -40,7 +39,7 @@ export async function downloadAndSaveQAWolfTests() {
             `const $ = execa`,
             `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
           )
-          .replaceAll(`/home/wolf/team-storage/`, `./cookies/`) ?? "";
+          .replaceAll(`/home/wolf/team-storage/`, `../cookies/`) ?? "";
       const testName = test.workflow.name;
       const generatedTest = testTemplate
         .replace("/*REPLACE_NAME*/", () => testName)
