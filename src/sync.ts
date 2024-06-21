@@ -33,9 +33,10 @@ export async function downloadAndSaveQAWolfTests() {
 
       const testName = test.workflow.name;
       const generatedTest = testTemplate
-        .replace("/*REPLACE_NAME*/", testName)
-        .replace("/*REPLACE_HELPER_CODE*/", helperCode)
-        .replace("/*REPLACE_TEST_CODE*/", testCode);
+        .replace("/*REPLACE_NAME*/", () => testName)
+        .replace("/*REPLACE_HELPER_CODE*/", () => helperCode)
+        .replace("/*REPLACE_TEST_CODE*/", () => testCode);
+
       fs.writeFileSync(
         path.join(TestsDirectory, `${snakeCase(testName)}.test.js`),
         generatedTest,
