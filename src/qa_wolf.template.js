@@ -5,16 +5,14 @@ const { faker } = require("@faker-js/faker");
 const { getInbox } = require("../getInbox");
 const { test, expect } = require("@playwright/test");
 const { chromium } = require("playwright");
+const { devices, getExecutablePath } = require("@replayio/playwright");
 
 // This is heinous, but I can't figure out how else to get it to work.
 const dynamicImport = new Function("specifier", "return import(specifier)");
-let execa;
-const execaPromise = dynamicImport("execa").then((module) => module.execa);
 
 require("dotenv").config({ path: [".env.local", ".env.qawolf"] });
 
 async function launch(opts) {
-  const { devices } = require("@replayio/playwright");
   const browser = await chromium.launch({
     ...opts,
     executablePath: devices["Replay Chromium"].launchOptions.executablePath,
@@ -42,6 +40,5 @@ let Browser = null;
 const Name = "/*REPLACE_NAME*/";
 
 test(Name, async () => {
-  await execaPromise;
   /*REPLACE_TEST_CODE*/
 });

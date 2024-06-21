@@ -20,9 +20,12 @@ export async function downloadAndSaveQAWolfTests() {
     .filter((t) => t.workflow.status === "active")
     .map((test) => {
       const helperCode =
-        test.stepOnBranchInWorkflowOnBranch.find(
-          (s) => s.stepOnBranch.name === "Node 20 Helpers",
-        )?.stepOnBranch.codeDenormalized ?? "";
+        test.stepOnBranchInWorkflowOnBranch
+          .find((s) => s.stepOnBranch.name === "Node 20 Helpers")
+          ?.stepOnBranch.codeDenormalized.replaceAll(
+            `const $ = execa`,
+            `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
+          ) ?? "";
 
       const testCode = test.stepOnBranchInWorkflowOnBranch
         .filter(
@@ -30,7 +33,11 @@ export async function downloadAndSaveQAWolfTests() {
         )
         .sort((a, b) => a.index - b.index)
         .map((t) => `{\n${t.stepOnBranch.codeDenormalized}\n}`)
-        .join("\n");
+        .join("\n")
+        .replaceAll(
+          `const $ = execa`,
+          `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
+        );
 
       const testName = test.workflow.name;
       const generatedTest = testTemplate
