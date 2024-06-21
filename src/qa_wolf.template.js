@@ -1,11 +1,15 @@
 /* Copyright 2020-2024 Record Replay Inc. */
 
-const { execa } = require("execa");
 const { assertElement, assertText } = require("qawolf");
 const { faker } = require("@faker-js/faker");
 const { getInbox } = require("../getInbox");
 const { test, expect } = require("@playwright/test");
 const { chromium } = require("playwright");
+
+// This is heinous, but I can't figure out how else to get it to work.
+const dynamicImport = new Function("specifier", "return import(specifier)");
+let execa;
+const execaPromise = dynamicImport("execa").then((module) => module.execa);
 
 require("dotenv").config({ path: [".env.local", ".env.qawolf"] });
 
@@ -38,5 +42,6 @@ let Browser = null;
 const Name = "/*REPLACE_NAME*/";
 
 test(Name, async () => {
+  await execaPromise;
   /*REPLACE_TEST_CODE*/
 });
