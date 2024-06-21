@@ -20,7 +20,7 @@ export async function downloadAndSaveQAWolfTests() {
     .map((test) => {
       const helperCode =
         test.stepOnBranchInWorkflowOnBranch.find(
-          (s) => s.stepOnBranch.name === "Helpers",
+          (s) => s.stepOnBranch.name === "Node 20 Helpers",
         )?.stepOnBranch.codeDenormalized ?? "";
 
       const testCode = test.stepOnBranchInWorkflowOnBranch
