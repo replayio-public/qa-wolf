@@ -25,20 +25,22 @@ export async function downloadAndSaveQAWolfTests() {
           ?.stepOnBranch.codeDenormalized.replaceAll(
             `const $ = execa`,
             `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
-          ) ?? "";
+          )
+          .replaceAll(`/home/wolf/team-storage/`, `./cookies/`) ?? "";
 
-      const testCode = test.stepOnBranchInWorkflowOnBranch
-        .filter(
-          (s) => !["Helpers", "Upload Replay"].includes(s.stepOnBranch.name),
-        )
-        .sort((a, b) => a.index - b.index)
-        .map((t) => `{\n${t.stepOnBranch.codeDenormalized}\n}`)
-        .join("\n")
-        .replaceAll(
-          `const $ = execa`,
-          `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
-        );
-
+      const testCode =
+        test.stepOnBranchInWorkflowOnBranch
+          .filter(
+            (s) => !["Helpers", "Upload Replay"].includes(s.stepOnBranch.name),
+          )
+          .sort((a, b) => a.index - b.index)
+          .map((t) => `{\n${t.stepOnBranch.codeDenormalized}\n}`)
+          .join("\n")
+          .replaceAll(
+            `const $ = execa`,
+            `const $ = (await dynamicImport("execa").then((module) => module.execa))`,
+          )
+          .replaceAll(`/home/wolf/team-storage/`, `./cookies/`) ?? "";
       const testName = test.workflow.name;
       const generatedTest = testTemplate
         .replace("/*REPLACE_NAME*/", () => testName)

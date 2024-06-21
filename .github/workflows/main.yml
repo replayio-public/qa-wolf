@@ -26,9 +26,7 @@ jobs:
         run: npx replayio update
       - name: Sync QAWolf Test Files
         run: npx ts-node src/sync.ts
-      - name: Make cookies directory
-        run: mkdir -p /home/wolf/team-storage
       - name: Decrypt cookie files to the right location
-        run: openssl enc -aes-256-cbc -d -in cookies/cnnCookies.json.enc -out /home/wolf/team-storage/cnnCookies.json -pbkdf2 -iter 100000 -pass pass:"$PASSWORD"
+        run: openssl enc -aes-256-cbc -d -in cookies/cnnCookies.json.enc -out cookies/cnnCookies.json -pbkdf2 -iter 100000 -pass pass:"$PASSWORD"
       - name: Run QAWolf Tests
         run: npx ts-node src/runPlaywright.ts
