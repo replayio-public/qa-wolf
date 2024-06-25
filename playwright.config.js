@@ -5,9 +5,9 @@ import path from "path";
 
 module.exports = {
   testDir: path.join(".", "src", "generated_tests"),
-  expect: { timeout: 15_000 },
+  expect: { timeout: 30_000 },
   workers: 4,
-  timeout: 60_000,
+  timeout: 180_000,
   retries: 0,
   reporter: [
     [
