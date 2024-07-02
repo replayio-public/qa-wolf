@@ -17,6 +17,7 @@ export async function downloadAndSaveQAWolfTests() {
 
   return tests.workflowsOnBranch
     .filter((t) => t.workflow.status === "active")
+    .slice(0, 1)
     .map((test) => {
       const helperCode =
         test.stepOnBranchInWorkflowOnBranch

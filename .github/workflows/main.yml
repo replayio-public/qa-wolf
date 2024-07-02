@@ -9,12 +9,12 @@ jobs:
     runs-on: macos-14
     environment: "QA Wolf Test Environment"
     env:
-      BRANCH_ID: ${{ secrets.BRANCH_ID }}
+      BRANCH_ID: "TEST: ${{ secrets.BRANCH_ID }}"
       COOKIES_ENCRYPTION_KEY: ${{ secrets.COOKIES_ENCRYPTION_KEY }}
       QAWOLF_API_KEY: ${{ secrets.QAWOLF_API_KEY }}
       QAWOLF_ENVIRONMENT_ID: ${{ secrets.QAWOLF_ENVIRONMENT_ID }}
       QAWOLF_TEAM_ID: ${{ secrets.QAWOLF_TEAM_ID }}
-      RECORD_REPLAY_METADATA_TEST_RUN_TITLE: "QAWolf Mac ARM"
+      REPLAY_METADATA_TEST_RUN_TITLE: "QAWolf Mac ARM ${{ github.ref }}"
       REPLAY_API_KEY: ${{ secrets.REPLAY_API_KEY }}
     steps:
       - uses: actions/checkout@v4
